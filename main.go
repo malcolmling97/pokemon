@@ -6,20 +6,6 @@ import (
 	"os"
 )
 
-func init() {
-	commandRegistry["help"] = cliCommand{
-		name:        "help",
-		description: "Displays help message",
-		callback:    commandHelp,
-	}
-	commandRegistry["exit"] = cliCommand{
-		name:        "exit",
-		description: "Exit the Pokedex",
-		callback:    commandExit,
-	}
-
-}
-
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
@@ -34,7 +20,7 @@ func main() {
 			firstword := arrText[0]
 			// check where arrText[0] (first value) in cliCommand.name
 
-			command, exists := commandRegistry[firstword]
+			command, exists := getCommands()[firstword]
 
 			if exists {
 				err := command.callback()

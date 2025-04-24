@@ -23,9 +23,10 @@ func commandHelp() error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()
-	for key, value := range commandRegistry {
-		fmt.Printf("%s: %v\n", key, value.description)
+	for _, cmd := range getCommands() {
+		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
 	}
+	fmt.Println()
 	return nil
 }
 
@@ -35,4 +36,17 @@ type cliCommand struct {
 	callback    func() error
 }
 
-var commandRegistry = map[string]cliCommand{}
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+	}
+}
