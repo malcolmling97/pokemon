@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"pokemon/internal/pokeapi"
+	"pokemon/internal/pokecache"
 	"strings"
 )
 
@@ -18,6 +19,7 @@ type config struct {
 	pokeapiClient   pokeapi.Client
 	nextLocationURL *string
 	prevLocationURL *string
+	cache           pokecache.Cache
 }
 
 func startRepl(cfg *config) {
