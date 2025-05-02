@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"pokemon/internal/pokeapi"
-	"pokemon/internal/pokecache"
 	"strings"
 )
 
@@ -19,7 +18,6 @@ type config struct {
 	pokeapiClient   pokeapi.Client
 	nextLocationURL *string
 	prevLocationURL *string
-	cache           pokecache.Cache
 }
 
 func startRepl(cfg *config) {
@@ -34,11 +32,15 @@ func startRepl(cfg *config) {
 
 		if len(arrText) > 0 {
 			firstword := arrText[0]
+			var secondword *string
+			if len(arrText) > 1 {
+				secondword = &arrText[1]
+			}
 
 			command, exists := getCommands()[firstword]
 
 			if exists {
-				err := command.callback(cfg)
+				err := command.callback(cfg, secondword)
 				if err != nil {
 					fmt.Printf("Error: %v", err)
 				}
@@ -54,11 +56,16 @@ func startRepl(cfg *config) {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, *string) error
 }
 
 func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
+		"explore": {
+			name:        "explore",
+			description: "Lists Pokemon within indicated map",
+			callback:    commandExplore,
+		},
 		"map": {
 			name:        "map",
 			description: "Displays next 20 Pokemon map",
