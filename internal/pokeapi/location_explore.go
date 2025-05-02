@@ -49,3 +49,34 @@ func (c *Client) ExploreLocation(location *string) (RespLocationPokemons, error)
 	return pokemonResp, nil
 
 }
+
+func (c *Client) CatchPokemon(pokemon *string) (RespPokemonInfo, error) {
+
+	url := baseURL + "/pokemon/" + *pokemon
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return RespPokemonInfo{}, err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return RespPokemonInfo{}, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return RespPokemonInfo{}, err
+	}
+
+	pokemonResp := RespPokemonInfo{}
+	err = json.Unmarshal(data, &pokemonResp)
+	if err != nil {
+		return RespPokemonInfo{}, err
+	}
+
+	return pokemonResp, nil
+
+}
